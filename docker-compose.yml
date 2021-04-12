@@ -1,0 +1,72 @@
+version: '3.7'
+services:
+  dbcomprador:
+    container_name: dbcomprador
+    image: postgres:13.2-alpine
+    restart: always
+    # ports:
+    #   - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: comprador
+  mscomprador:
+    container_name: mscomprador
+    image: adcrfiap/ms-comprador:1.0
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on: 
+      - dbcomprador    
+      
+  dbproduto:
+    container_name: dbproduto
+    image: postgres:13.2-alpine
+    restart: always
+    # ports:
+    #   - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: produto
+  msproduto:
+    container_name: msproduto
+    image: adcrfiap/ms-produto:1.0
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on: 
+      - dbproduto
+
+  mqintensao:
+    container_name: mqintensao
+    image: adcrfiap/rabbitmq:1.0.0
+    environment:
+      - RABBITMQ_CONFIG_FILE=/etc/rabbitmq/rabbitmq.conf
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log [{console,[{level,debug}]}]
+    ports:
+      - 15672:15672
+      - 5672:5672
+  dbintensao:
+    container_name: dbintensao
+    image: postgres:13.2-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: intensao
+  msintensao:
+    container_name: msintensao
+    image: adcrfiap/ms-intensao:1.0
+    restart: always
+    ports:
+      - 8082:8082
+    depends_on: 
+      - dbintensao
+      - mqintensao
+    links: 
+      - mscomprador
+      - msproduto
+      - mqintensao

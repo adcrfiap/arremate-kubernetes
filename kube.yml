@@ -1,0 +1,357 @@
+apiVersion: v1
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dbintensao
+      name: dbintensao
+    spec:
+      ports:
+        - name: "5432"
+          port: 5432
+          targetPort: 5432
+      selector:
+        io.kompose.service: dbintensao
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mqintensao
+      name: mqintensao
+    spec:
+      ports:
+        - name: "15672"
+          port: 15672
+          targetPort: 15672
+        - name: "5672"
+          port: 5672
+          targetPort: 5672
+      selector:
+        io.kompose.service: mqintensao
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mscomprador
+      name: mscomprador
+    spec:
+      ports:
+        - name: "8080"
+          port: 8080
+          targetPort: 8080
+      selector:
+        io.kompose.service: mscomprador
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: msintensao
+      name: msintensao
+    spec:
+      ports:
+        - name: "8082"
+          port: 8082
+          targetPort: 8082
+      selector:
+        io.kompose.service: msintensao
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: msproduto
+      name: msproduto
+    spec:
+      ports:
+        - name: "8081"
+          port: 8081
+          targetPort: 8081
+      selector:
+        io.kompose.service: msproduto
+    status:
+      loadBalancer: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dbcomprador
+      name: dbcomprador
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: dbcomprador
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -o kube.yml
+            kompose.version: 1.22.0 (955b78124)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: dbcomprador
+        spec:
+          containers:
+            - env:
+                - name: POSTGRES_DB
+                  value: comprador
+                - name: POSTGRES_PASSWORD
+                  value: admin
+                - name: POSTGRES_USER
+                  value: admin
+              image: postgres:13.2-alpine
+              name: dbcomprador
+              resources: {}
+          restartPolicy: Always
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dbintensao
+      name: dbintensao
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: dbintensao
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -o kube.yml
+            kompose.version: 1.22.0 (955b78124)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: dbintensao
+        spec:
+          containers:
+            - env:
+                - name: POSTGRES_DB
+                  value: intensao
+                - name: POSTGRES_PASSWORD
+                  value: admin
+                - name: POSTGRES_USER
+                  value: admin
+              image: postgres:13.2-alpine
+              name: dbintensao
+              ports:
+                - containerPort: 5432
+              resources: {}
+          restartPolicy: Always
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dbproduto
+      name: dbproduto
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: dbproduto
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -o kube.yml
+            kompose.version: 1.22.0 (955b78124)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: dbproduto
+        spec:
+          containers:
+            - env:
+                - name: POSTGRES_DB
+                  value: produto
+                - name: POSTGRES_PASSWORD
+                  value: admin
+                - name: POSTGRES_USER
+                  value: admin
+              image: postgres:13.2-alpine
+              name: dbproduto
+              resources: {}
+          restartPolicy: Always
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mqintensao
+      name: mqintensao
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: mqintensao
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -o kube.yml
+            kompose.version: 1.22.0 (955b78124)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: mqintensao
+        spec:
+          containers:
+            - env:
+                - name: RABBITMQ_CONFIG_FILE
+                  value: /etc/rabbitmq/rabbitmq.conf
+                - name: RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
+                  value: -rabbit log [{console,[{level,debug}]}]
+              image: adcrfiap/rabbitmq:1.0.0
+              name: mqintensao
+              ports:
+                - containerPort: 15672
+                - containerPort: 5672
+              resources: {}
+          restartPolicy: Always
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mscomprador
+      name: mscomprador
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: mscomprador
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -o kube.yml
+            kompose.version: 1.22.0 (955b78124)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: mscomprador
+        spec:
+          containers:
+            - image: adcrfiap/ms-comprador:1.0
+              name: mscomprador
+              ports:
+                - containerPort: 8080
+              resources: {}
+          restartPolicy: Always
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: msintensao
+      name: msintensao
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: msintensao
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -o kube.yml
+            kompose.version: 1.22.0 (955b78124)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: msintensao
+        spec:
+          containers:
+            - image: adcrfiap/ms-intensao:1.0
+              name: msintensao
+              ports:
+                - containerPort: 8082
+              resources: {}
+          restartPolicy: Always
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kube.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: msproduto
+      name: msproduto
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: msproduto
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -o kube.yml
+            kompose.version: 1.22.0 (955b78124)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: msproduto
+        spec:
+          containers:
+            - image: adcrfiap/ms-produto:1.0
+              name: msproduto
+              ports:
+                - containerPort: 8081
+              resources: {}
+          restartPolicy: Always
+    status: {}
+kind: List
+metadata: {}
+
